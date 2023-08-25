@@ -10,7 +10,7 @@ app.use(express.json())
 
 app.use(express.urlencoded({extended:false}))
 
-app.use("/user",userRoute);
+app.use("/users",userRoute);
 
 app.get('/', (req, res)=> {
   res.send('This is from Backend');
