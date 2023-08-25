@@ -5,12 +5,14 @@ const connection = require("./config/dbConfig")
 const PORT = process.env.PORT || 8080
 const app = express();
 const userRoute = require("./routes/user.route");
+const postRoute = require('./routes/post.route');
 app.use(cors())
 app.use(express.json())
 
 app.use(express.urlencoded({extended:false}))
 
 app.use("/users",userRoute);
+app.use("/posts", postRoute)
 
 app.get('/', (req, res)=> {
   res.send('This is from Backend');
