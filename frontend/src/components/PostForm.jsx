@@ -7,79 +7,109 @@ import {
   Input,
   Textarea,
   Button,
+  Select,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { usePostContext } from '../contexts/PostContext';
+import { useUserContext } from '../contexts/UserContext';
 
 const PostForm = () => {
+  const {users} = useUserContext()
   const [content, setContent] = useState('');
-  const [userId, setUserId] = useState(''); // Add userId state
-  const params = useParams(); // Extract post ID from the URL
-  console.log(params);
-  let postId = params.id
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const { id } = useParams();
+  const [allUsers, setAllUsers] = useState([]);
+  const toast = useToast();
 
   useEffect(() => {
-    // Fetch post data if editing an existing post
-    if (postId) {
+    if (id) {
       fetchPostData();
     }
-    // Fetch userId here if needed
-    fetchUserId();
-  }, [postId]);
+    fetchUsers();
+  }, [id]);
 
   const fetchPostData = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/posts/${postId}`);
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/posts/${id}`);
       const post = response.data;
       setContent(post.content);
-      setUserId(post.user_id); // Set userId from the post data
+      setSelectedUserId(post.user_id);
     } catch (error) {
       console.error('Error fetching post data:', error);
     }
   };
 
-  const fetchUserId = async () => {
-    try {
-      // Fetch userId logic here if needed
-      // Example: const response = await axios.get(`/api/users/${userId}`);
-      // const user = response.data;
-      // setUserId(user.id);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
+  const fetchUsers = async () => {
+    users && setAllUsers(users)
+  };
+
+  const handleUserSelect = (e) => {
+    setSelectedUserId(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const postData = { content, user_id: userId }; // Include userId in the postData
 
     try {
-      if (postId) {
-        await axios.put(`/api/posts/${postId}`, postData);
+      const postData = { content, user_id: selectedUserId };
+
+      if (id) {
+        const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/posts/${id}`, postData);
+        console.log(response.data)
+        toast({
+          title: 'Success',
+          description: "Post Editted Successfully !",
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        
       } else {
-        await axios.post('/api/posts', postData);
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/posts`, postData);
+        console.log(response.data)
+        toast({
+          title: 'Success',
+          description: "Post Successfully Created",
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
       }
-      // Redirect or show success message as needed
     } catch (error) {
       console.error('Error submitting post data:', error);
+      toast({
+        title: 'Error',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
     }
   };
 
   return (
     <Box>
-      <Heading>{postId ? 'Edit Post' : 'Create Post'}</Heading>
+      <Heading>{id ? 'Edit Post' : 'Create Post'}</Heading>
       <form onSubmit={handleSubmit}>
         <VStack spacing={4} align="stretch">
-          {/* Add userId input field */}
-          <FormControl>
-            <FormLabel>User ID</FormLabel>
-            <Input
-              type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-            />
-          </FormControl>
+          {!id && (
+            <FormControl>
+              <FormLabel>Select User</FormLabel>
+              <Select value={selectedUserId} onChange={handleUserSelect}>
+                <option value="" disabled>
+                  Select a user
+                </option>
+                {allUsers.map((user) => (
+                  <option key={user.id} value={user._id}>
+                    {user.name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <FormControl>
             <FormLabel>Content</FormLabel>
             <Textarea
@@ -88,7 +118,7 @@ const PostForm = () => {
             />
           </FormControl>
           <Button type="submit" colorScheme="blue">
-            {postId ? 'Save Changes' : 'Create Post'}
+            {id ? 'Save Changes' : 'Create Post'}
           </Button>
         </VStack>
       </form>

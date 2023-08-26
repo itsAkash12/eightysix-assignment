@@ -16,6 +16,7 @@ const AllRoutes = () => {
       <Route path="/users" element={<UserForm />} />
       <Route path="/users/:userId" element={<UserForm />} />
       <Route path="/users-view/:userId" element={<UserView />} />
+      <Route path="/posts" element={<PostForm />} />
       <Route path="/posts/:id" element={<PostForm />} />
       <Route path="/user-list" element={<UserList />} />
       <Route path="/post-list" element={<PostList />} />

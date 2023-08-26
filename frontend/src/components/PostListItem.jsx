@@ -3,10 +3,16 @@ import { Box, Text, IconButton, Flex } from "@chakra-ui/react";
 import { FaThumbsUp, FaThumbsDown, FaEdit, FaTrash } from "react-icons/fa";
 import { getRandomColor } from "../helpers/getRandomColor";
 import { useNavigate } from "react-router-dom";
+import { usePostContext } from "../contexts/PostContext";
 
-const PostListItem = ({post,handleDelete,handleLike,handleUnlike}) => {
+const PostListItem = ({post}) => {
+  const {handleDelete,handleLike,handleUnlike}= usePostContext()
+
     const navigate = useNavigate()
   const cardColor = getRandomColor();
+  const handleEdit= (post)=> {
+    navigate(`/posts/${post._id}`);
+  }
   return (
     <Box
       key={post._id}
@@ -48,7 +54,7 @@ const PostListItem = ({post,handleDelete,handleLike,handleUnlike}) => {
             mr={2}
             colorScheme="orange"
           />
-          <IconButton icon={<FaEdit />} aria-label="Edit" mr={2} onClick={()=>navigate(`/posts/${post._id}`)} />
+          <IconButton icon={<FaEdit />} aria-label="Edit" mr={2} onClick={()=>handleEdit(post)} />
         </Flex>
         <IconButton
           icon={<FaTrash />}

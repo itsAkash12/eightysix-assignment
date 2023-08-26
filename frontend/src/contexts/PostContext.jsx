@@ -1,20 +1,35 @@
 import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 const PostContext = createContext();
 
 export const usePostContext = () => useContext(PostContext);
 
 export const PostProvider = ({ children }) => {
+  const toast = useToast();
   const [posts, setPosts] = useState([]);
   const [flag,setFlag]= useState(false);
 
   const handleLike = async (postId) => {
     try {
       await axios.post(`${import.meta.env.VITE_BASE_URL}/posts/${postId}/like`);
-      // fetchPosts();
       setFlag(!flag)
+      toast({
+        title: 'Success',
+        description: "Post Liked!",
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
+      })
     } catch (error) {
       console.error("Error liking post:", error);
+      toast({
+        title: 'Error',
+        description: error.response.data.message,
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      })
     }
   };
 
@@ -23,20 +38,46 @@ export const PostProvider = ({ children }) => {
       await axios.post(
         `${import.meta.env.VITE_BASE_URL}/posts/${postId}/unlike`
       );
-      // fetchPosts();
       setFlag(!flag)
+      toast({
+        title: 'Success',
+        description: "Post Unliked",
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
+      })
     } catch (error) {
       console.error("Error unliking post:", error);
+      toast({
+        title: 'Error',
+        description: error.response.data.message,
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      })
     }
   };
 
   const handleDelete = async (postId) => {
     try {
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/posts/${postId}`);
-      // fetchPosts();
       setFlag(!flag)
+      toast({
+        title: 'Success',
+        description: "Post Deleted Successfully",
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
     } catch (error) {
       console.error("Error deleting post:", error);
+      toast({
+        title: 'Error',
+        description: "Error While Deleting the Post",
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      })
     }
   };
 

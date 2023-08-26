@@ -7,12 +7,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 import axios from "axios"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PostListItem from "./PostListItem";
 import { usePostContext } from "../contexts/PostContext";
 
 const PostList = ({ userid }) => {
-  const { posts,setPosts,flag,handleLike,handleUnlike,handleDelete } = usePostContext();
+  const { posts,setPosts,flag,currentUser,setCurrentUser} = usePostContext();
+  const navigate = useNavigate();
 
   const fetchPosts = async () => {
     try {
@@ -41,9 +42,8 @@ const PostList = ({ userid }) => {
         gap={"10px"}
       >
         <Heading size="lg">Posts</Heading>
-        <Link to={`/posts/${userid}`}>
-          <Button colorScheme="yellow">Create New Post</Button>
-        </Link>
+        
+          <Button colorScheme="yellow" onClick={()=> navigate("/posts")}>Create New Post</Button>
       </Box>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4} p={"30px"}>
         {posts.length <= 0 ? (
@@ -57,7 +57,7 @@ const PostList = ({ userid }) => {
         ) : (
           posts &&
           posts.map((post) => (
-            <PostListItem  key={post._id} post={post} handleDelete={handleDelete} handleLike={handleLike} handleUnlike={handleUnlike}/>
+            <PostListItem  key={post._id} post={post}/>
           ))
         )}
       </SimpleGrid>
