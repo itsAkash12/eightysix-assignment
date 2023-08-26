@@ -35,7 +35,7 @@ const UserView = () => {
             <Text>Bio: {user.bio || 'No bio available'}</Text>
           </Box>
           <Divider />
-          <PostList userid={user._id}/>
+          <PostList userid={user._id} />
         </VStack>
       )}
     </Box>

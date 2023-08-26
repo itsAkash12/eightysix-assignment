@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Table, Thead, Tbody, Th, Tr, Heading } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid } from '@chakra-ui/react';
 import axios from 'axios';
 import UserListItem from './UserListItem';
 
@@ -30,28 +30,12 @@ const UserList = () => {
 
   return (
     <Box>
-      <Heading textAlign={"center"}>Users List</Heading>
-      <Box w={"80%"} margin={"auto"} borderWidth={"thin"} p={"5px"} mt={"30px"}>
-      <Table>
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th>Email</Th>
-            <Th>Bio</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {users.map((user) => (
-            <UserListItem
-              key={user.id}
-              user={user}
-              onDeleteUser={deleteUser}
-            />
-          ))}
-        </Tbody>
-      </Table>
-      </Box>
+      <Heading textAlign="center">Users List</Heading>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4} p={4}>
+        {users.map((user) => (
+          <UserListItem key={user._id} user={user} onDeleteUser={deleteUser} />
+        ))}
+      </SimpleGrid>
     </Box>
   );
 };

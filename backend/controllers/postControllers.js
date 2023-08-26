@@ -20,7 +20,7 @@ const createPost = async (req, res) => {
 // Retrieving a post by id
 const getAllPost = async (req, res) => {
   try {
-    const post = await PostModel.find();
+    const post = await PostModel.find().populate('user_id', 'name');
     res.json(post);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -28,7 +28,7 @@ const getAllPost = async (req, res) => {
 };
 const getPostById = async (req, res) => {
   try {
-    const post = await PostModel.findById(req.params.id);
+    const post = await PostModel.findById(req.params.id).populate('user_id', 'name');
     if (!post) {
       return res.status(404).json({ message: "Post not found." });
     }
@@ -39,7 +39,7 @@ const getPostById = async (req, res) => {
 };
 const getPostByUserId = async (req, res) => {
   try {
-    const post = await PostModel.find({user_id:req.params.userid});
+    const post = await PostModel.find({user_id:req.params.userid}).populate('user_id', 'name');
     if (!post) {
       return res.status(404).json({ message: "Post not found." });
     }

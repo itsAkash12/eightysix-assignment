@@ -3,15 +3,13 @@ import {
   Box,
   Heading,
   Text,
-  Card,
   SimpleGrid,
-  IconButton,
-  Flex,
   Button,
 } from "@chakra-ui/react";
-import { FaThumbsUp, FaThumbsDown, FaEdit, FaTrash } from "react-icons/fa";
+
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PostListItem from "./PostListItem";
 
 const PostList = ({ userid }) => {
   const [posts, setPosts] = useState([]);
@@ -64,46 +62,31 @@ const PostList = ({ userid }) => {
 
   return (
     <Box>
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"} flexDirection={"column"} gap={"10px"}>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection={"column"}
+        gap={"10px"}
+      >
         <Heading size="lg">Posts</Heading>
-        <Link to={`/posts/${userid}`}><Button colorScheme="yellow">Create New Post</Button></Link>
+        <Link to={`/posts/${userid}`}>
+          <Button colorScheme="yellow">Create New Post</Button>
+        </Link>
       </Box>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4} p={"30px"}>
         {posts.length <= 0 ? (
-          <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
             <Text>No Post Found !!</Text>
           </Box>
         ) : (
+          posts &&
           posts.map((post) => (
-            <Card key={post._id} padding={4} boxShadow="md" borderRadius="md">
-              <Text>{post.content}</Text>
-              <Text>Likes: {post.likes}</Text>
-              <Flex align="center" mt={2}>
-                <IconButton
-                  icon={<FaThumbsUp />}
-                  aria-label="Like"
-                  onClick={() => handleLike(post._id)}
-                  mr={2}
-                />
-                <IconButton
-                  icon={<FaThumbsDown />}
-                  aria-label="Unlike"
-                  onClick={() => handleUnlike(post._id)}
-                  mr={2}
-                />
-                <IconButton
-                  icon={<FaEdit />}
-                  aria-label="Edit"
-                  // Add onClick logic to redirect to edit form page
-                  mr={2}
-                />
-                <IconButton
-                  icon={<FaTrash />}
-                  aria-label="Delete"
-                  onClick={() => handleDelete(post._id)}
-                />
-              </Flex>
-            </Card>
+            <PostListItem  key={post._id} post={post} handleDelete={handleDelete} handleLike={handleLike} handleUnlike={handleUnlike}/>
           ))
         )}
       </SimpleGrid>
