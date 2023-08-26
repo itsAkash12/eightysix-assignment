@@ -33,7 +33,7 @@ const Navbar = () => {
     <Box bg="teal.500" p={4}>
       <Flex align="center" maxW="1200px" mx="auto">
         <Heading size="md" color="white">
-          Social Media App
+          Connect Us
         </Heading>
         <Spacer />
         {isMobile ? (
