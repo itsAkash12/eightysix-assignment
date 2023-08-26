@@ -15,7 +15,9 @@ import { useParams } from 'react-router-dom';
 const PostForm = () => {
   const [content, setContent] = useState('');
   const [userId, setUserId] = useState(''); // Add userId state
-  const { postId } = useParams(); // Extract post ID from the URL
+  const params = useParams(); // Extract post ID from the URL
+  console.log(params);
+  let postId = params.id
 
   useEffect(() => {
     // Fetch post data if editing an existing post
@@ -28,7 +30,7 @@ const PostForm = () => {
 
   const fetchPostData = async () => {
     try {
-      const response = await axios.get(`/api/posts/${postId}`);
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/posts/${postId}`);
       const post = response.data;
       setContent(post.content);
       setUserId(post.user_id); // Set userId from the post data

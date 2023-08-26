@@ -6,17 +6,13 @@ import {
   SimpleGrid,
   Button,
 } from "@chakra-ui/react";
-
-import axios from "axios";
+import axios from "axios"
 import { Link } from "react-router-dom";
 import PostListItem from "./PostListItem";
+import { usePostContext } from "../contexts/PostContext";
 
 const PostList = ({ userid }) => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    fetchPosts();
-  }, [userid]);
+  const { posts,setPosts,flag,handleLike,handleUnlike,handleDelete } = usePostContext();
 
   const fetchPosts = async () => {
     try {
@@ -30,35 +26,10 @@ const PostList = ({ userid }) => {
       console.error("Error fetching posts:", error);
     }
   };
-
-  const handleLike = async (postId) => {
-    try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/posts/${postId}/like`);
-      fetchPosts();
-    } catch (error) {
-      console.error("Error liking post:", error);
-    }
-  };
-
-  const handleUnlike = async (postId) => {
-    try {
-      await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/posts/${postId}/unlike`
-      );
-      fetchPosts();
-    } catch (error) {
-      console.error("Error unliking post:", error);
-    }
-  };
-
-  const handleDelete = async (postId) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_BASE_URL}/posts/${postId}`);
-      fetchPosts();
-    } catch (error) {
-      console.error("Error deleting post:", error);
-    }
-  };
+  
+  useEffect(() => {
+    fetchPosts();
+  }, [userid, flag]);
 
   return (
     <Box>

@@ -5,11 +5,9 @@ import UserForm from '../components/UserForm';
 import PostForm from '../components/PostForm';
 import UserList from '../components/UserList';
 import PostList from '../components/PostList';
-import UserAnalytics from '../components/UserAnalytics';
-import PostAnalytics from '../components/PostAnalytics';
 import UserView from '../components/UserView';
-import Homepage from '../components/Homepage';
 import Analytics from '../pages/Analytics';
+import Homepage from '../pages/Homepage'
 
 const AllRoutes = () => {
   return (
