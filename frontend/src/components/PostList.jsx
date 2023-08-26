@@ -12,7 +12,7 @@ import PostListItem from "./PostListItem";
 import { usePostContext } from "../contexts/PostContext";
 
 const PostList = ({ userid }) => {
-  const { posts,setPosts,flag,currentUser,setCurrentUser} = usePostContext();
+  const { posts,setPosts,flag} = usePostContext();
   const navigate = useNavigate();
 
   const fetchPosts = async () => {

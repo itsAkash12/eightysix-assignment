@@ -12,7 +12,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usePostContext } from '../contexts/PostContext';
 import { useUserContext } from '../contexts/UserContext';
 
@@ -23,12 +23,14 @@ const PostForm = () => {
   const { id } = useParams();
   const [allUsers, setAllUsers] = useState([]);
   const toast = useToast();
+  const {flag,setFlag} = usePostContext()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (id) {
       fetchPostData();
     }
-    fetchUsers();
+    fetchAllUsers();
   }, [id]);
 
   const fetchPostData = async () => {
@@ -42,7 +44,7 @@ const PostForm = () => {
     }
   };
 
-  const fetchUsers = async () => {
+  const fetchAllUsers = async () => {
     users && setAllUsers(users)
   };
 
@@ -66,6 +68,8 @@ const PostForm = () => {
           duration: 3000,
           isClosable: true,
         })
+        setFlag(!flag);
+        navigate("/post-list")
         
       } else {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/posts`, postData);
@@ -77,12 +81,14 @@ const PostForm = () => {
           duration: 3000,
           isClosable: true,
         })
+        setFlag(!flag);
+        navigate("/post-list")
       }
     } catch (error) {
       console.error('Error submitting post data:', error);
       toast({
         title: 'Error',
-        description: error.message,
+        description: error.response.data.error,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -92,7 +98,8 @@ const PostForm = () => {
 
   return (
     <Box>
-      <Heading>{id ? 'Edit Post' : 'Create Post'}</Heading>
+      <Heading textAlign={"center"}>{id ? 'Edit Post' : 'Create Post'}</Heading>
+      <Box w={"60%"} m={"auto"} borderWidth={"thin"} borderRadius={"10px"} p={"10px"} mt={"30px"}>
       <form onSubmit={handleSubmit}>
         <VStack spacing={4} align="stretch">
           {!id && (
@@ -122,6 +129,7 @@ const PostForm = () => {
           </Button>
         </VStack>
       </form>
+      </Box>
     </Box>
   );
 };
