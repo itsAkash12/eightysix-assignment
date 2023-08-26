@@ -27,12 +27,12 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      { $set: req.body },
-      { new: true, runValidators: true }
+      req.params.id,
+      { name: req.body.name, bio: req.body.bio },
+      { new: true, runValidators:true }
     );
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(404).json({ message: 'User not found.' });
     }
     res.json(updatedUser);
   } catch (error) {

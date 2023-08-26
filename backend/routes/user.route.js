@@ -5,7 +5,7 @@ const userRoute = router();
 
 userRoute.post('/', createUser);
 userRoute.get('/:id', getUserById);
-userRoute.patch('/:id', updateUser);
+userRoute.put('/:id', updateUser);
 userRoute.delete('/:id', deleteUser);
 
 module.exports = userRoute;

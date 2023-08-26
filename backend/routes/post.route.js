@@ -4,7 +4,7 @@ const {createPost, getPostById, updatePost, deletePost, likePost, unlikePost} = 
 
 postRoute.post('/', createPost);
 postRoute.get('/:id', getPostById);
-postRoute.patch('/:id', updatePost);
+postRoute.put('/:id', updatePost);
 postRoute.delete('/:id', deletePost);
 postRoute.post('/:id/like', likePost);
 postRoute.post('/:id/unlike', unlikePost);

@@ -34,12 +34,12 @@ const getPostById = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const updatedPost = await PostModel.findByIdAndUpdate(
-      { _id: req.params.id },
-      { $set: req.body },
-      { new: true, runValidators: true }
+      req.params.id,
+      { content: req.body.content },
+      { new: true, runValidators:true }
     );
     if (!updatedPost) {
-      return res.status(404).json({ message: "Post not found." });
+      return res.status(404).json({ message: 'Post not found.' });
     }
     res.json(updatedPost);
   } catch (error) {
