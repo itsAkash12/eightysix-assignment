@@ -18,9 +18,28 @@ const createPost = async (req, res) => {
 };
 
 // Retrieving a post by id
+const getAllPost = async (req, res) => {
+  try {
+    const post = await PostModel.find();
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 const getPostById = async (req, res) => {
   try {
     const post = await PostModel.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const getPostByUserId = async (req, res) => {
+  try {
+    const post = await PostModel.find({user_id:req.params.userid});
     if (!post) {
       return res.status(404).json({ message: "Post not found." });
     }
@@ -103,8 +122,10 @@ const unlikePost = async (req, res) => {
 module.exports = {
   createPost,
   getPostById,
+  getPostByUserId,
   updatePost,
   deletePost,
   likePost,
   unlikePost,
+  getAllPost
 };

@@ -1,9 +1,59 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { Box, Table, Thead, Tbody, Th, Tr, Heading } from '@chakra-ui/react';
+import axios from 'axios';
+import UserListItem from './UserListItem';
 
 const UserList = () => {
-  return (
-    <div>UserList</div>
-  )
-}
+  const [users, setUsers] = useState([]);
 
-export default UserList
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users`);
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/${id}`);
+      fetchUsers();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  return (
+    <Box>
+      <Heading textAlign={"center"}>Users List</Heading>
+      <Box w={"80%"} margin={"auto"} borderWidth={"thin"} p={"5px"} mt={"30px"}>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Name</Th>
+            <Th>Email</Th>
+            <Th>Bio</Th>
+            <Th>Actions</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {users.map((user) => (
+            <UserListItem
+              key={user.id}
+              user={user}
+              onDeleteUser={deleteUser}
+            />
+          ))}
+        </Tbody>
+      </Table>
+      </Box>
+    </Box>
+  );
+};
+
+export default UserList;
