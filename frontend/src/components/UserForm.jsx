@@ -1,9 +1,9 @@
 import React from 'react'
 
-const userForm = () => {
+const UserForm = () => {
   return (
     <div>userForm</div>
   )
 }
 
-export default userForm
+export default UserForm
