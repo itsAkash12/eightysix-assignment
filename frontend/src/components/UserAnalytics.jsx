@@ -4,6 +4,7 @@ import axios from 'axios';
 import { getRandomColor } from '../helpers/getRandomColor';
 
 const UserAnalytics = () => {
+  const [loading,setLoading] = useState(false);
   const cardColor = getRandomColor();
   const [totalUsers, setTotalUsers] = useState(0);
   const [topActiveUsers, setTopActiveUsers] = useState([]);
@@ -13,21 +14,26 @@ const UserAnalytics = () => {
   }, []);
 
   const fetchUserAnalytics = async () => {
+    setLoading(true);
     try {
       const totalRes = await axios.get(`${import.meta.env.VITE_BASE_URL}/analytics/users`);
       setTotalUsers(totalRes.data.totalUsers);
 
       const activeRes = await axios.get(`${import.meta.env.VITE_BASE_URL}/analytics/users/top-active`);
       setTopActiveUsers(activeRes.data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching user analytics:', error);
+      setLoading(false);
     }
   };
 
   return (
     <Box>
       <Heading mb="4" textAlign={"center"}>User Analytics</Heading>
-      <Box bg="red.200" p="4" borderRadius="md" shadow="md">
+      {
+        loading ? <Text textAlign={"center"}>Loading...</Text>:<Box>
+          <Box bg="red.200" p="4" borderRadius="md" shadow="md">
         <Text>Total Users: {totalUsers}</Text>
       </Box>
       <Box mt="8">
@@ -38,6 +44,8 @@ const UserAnalytics = () => {
           </Box>
         ))}
       </Box>
+        </Box>
+      }
     </Box>
   );
 };

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { getRandomColor } from '../helpers/getRandomColor';
 
 const PostAnalytics = () => {
+  const [loading,setLoading] = useState(false);
   const cardColor = getRandomColor();
   const [totalPosts, setTotalPosts] = useState(0);
   const [topLikedPosts, setTopLikedPosts] = useState([]);
@@ -13,21 +14,26 @@ const PostAnalytics = () => {
   }, []);
 
   const fetchPostAnalytics = async () => {
+    setLoading(true);
     try {
       const totalRes = await axios.get(`${import.meta.env.VITE_BASE_URL}/analytics/posts`);
       setTotalPosts(totalRes.data.totalPosts);
 
       const topRes = await axios.get(`${import.meta.env.VITE_BASE_URL}/analytics/posts/top-liked`);
       setTopLikedPosts(topRes.data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching post analytics:', error);
+      setLoading(false);
     }
   };
 
   return (
     <Box>
       <Heading mb="4" textAlign={"center"}>Post Analytics</Heading>
-      <Box bg="red.200" p="4" borderRadius="md" shadow="md" >
+      {
+        loading ? <Text textAlign={"center"}>Loading...</Text>:<Box>
+          <Box bg="red.200" p="4" borderRadius="md" shadow="md" >
         <Text>Total Posts: {totalPosts}</Text>
       </Box>
       <Box mt="8">
@@ -38,6 +44,8 @@ const PostAnalytics = () => {
           </Box>
         ))}
       </Box>
+        </Box>
+      }
     </Box>
   );
 };

@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from '../contexts/UserContext';
 
 const UserForm = () => {
+  const [loading,setLoading] = useState(false);
   const {flag,setFlag} = useUserContext()
   const navigate = useNavigate()
   const toast = useToast();
@@ -45,6 +46,7 @@ const UserForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const userData = { name, email, bio };
 
@@ -61,6 +63,7 @@ const UserForm = () => {
         })
         navigate("/user-list")
         setFlag(!flag)
+        setLoading(false);
       } else {
         let response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users`, userData);
         console.log(response.data);
@@ -73,6 +76,7 @@ const UserForm = () => {
         })
         navigate("/user-list")
         setFlag(!flag)
+        setLoading(false);
       }
      
     } catch (error) {
@@ -84,6 +88,7 @@ const UserForm = () => {
         duration: 3000,
         isClosable: true,
       })
+      setLoading(false);
     }
   };
 
@@ -116,7 +121,7 @@ const UserForm = () => {
               onChange={(e) => setBio(e.target.value)}
             />
           </FormControl>
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" colorScheme="blue" isLoading={loading}>
             {userId ? 'Save Changes' : 'Create User'}
           </Button>
         </VStack>

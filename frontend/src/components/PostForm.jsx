@@ -17,6 +17,7 @@ import { usePostContext } from '../contexts/PostContext';
 import { useUserContext } from '../contexts/UserContext';
 
 const PostForm = () => {
+  const [loading,setLoading] =useState(false);
   const {users} = useUserContext()
   const [content, setContent] = useState('');
   const [selectedUserId, setSelectedUserId] = useState('');
@@ -54,6 +55,7 @@ const PostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
 
     try {
       const postData = { content, user_id: selectedUserId };
@@ -69,6 +71,7 @@ const PostForm = () => {
           isClosable: true,
         })
         setFlag(!flag);
+        setLoading(false);
         navigate("/post-list")
         
       } else {
@@ -82,6 +85,7 @@ const PostForm = () => {
           isClosable: true,
         })
         setFlag(!flag);
+        setLoading(false);
         navigate("/post-list")
       }
     } catch (error) {
@@ -93,6 +97,7 @@ const PostForm = () => {
         duration: 3000,
         isClosable: true,
       })
+      setLoading(false);
     }
   };
 
@@ -124,7 +129,7 @@ const PostForm = () => {
               onChange={(e) => setContent(e.target.value)}
             />
           </FormControl>
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" colorScheme="blue" isLoading={loading}>
             {id ? 'Save Changes' : 'Create Post'}
           </Button>
         </VStack>
