@@ -11,9 +11,12 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useUserContext } from '../contexts/UserContext';
 
 const UserForm = () => {
+  const {flag,setFlag} = useUserContext()
+  const navigate = useNavigate()
   const toast = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -29,6 +32,7 @@ const UserForm = () => {
   }, [userId]);
 
   const fetchUserData = async () => {
+    
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/${userId}`);
       const user = response.data;
@@ -55,6 +59,8 @@ const UserForm = () => {
           duration: 3000,
           isClosable: true,
         })
+        navigate("/user-list")
+        setFlag(!flag)
       } else {
         let response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users`, userData);
         console.log(response.data);
@@ -65,8 +71,10 @@ const UserForm = () => {
           duration: 3000,
           isClosable: true,
         })
+        navigate("/user-list")
+        setFlag(!flag)
       }
-      // Redirect or show success message as needed
+     
     } catch (error) {
       console.log(error)
       toast({
